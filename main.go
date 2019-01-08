@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	fmt.Println("ComputerV1:")
+	fmt.Println("--- ComputerV1 ---")
 	if os.Args == nil {
 		fmt.Println("os.Args is nil")
 		os.Exit(1)
@@ -16,11 +16,14 @@ func main() {
 		os.Exit(1)
 	}
 	leftCoefs, rightCoefs := parsingEntry(os.Args[1])
-	// reduce
+	if leftCoefs == nil || rightCoefs == nil {
+		fmt.Println("Exit on parsing error")
+		os.Exit(1)
+	}
 	reducedCoefs := reduce(leftCoefs, rightCoefs)
+	fmt.Printf("Left part: %v\n", leftCoefs)
+	fmt.Printf("Right part: %v\n", rightCoefs)
 	fmt.Printf("Final: %v\n", reducedCoefs)
-	// degree
 	degree(reducedCoefs)
-	// solution
 	solution(reducedCoefs)
 }
