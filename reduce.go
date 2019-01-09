@@ -2,12 +2,12 @@ package main
 
 import "fmt"
 
-func reduce(left []int, right []int) []int {
-	var value int
+func reduce(left []int64, right []int64) []int64 {
+	var value int64
 
 	fmt.Print("Reduced form:")
 	length := len(left)
-	coefficients := make([]int, length)
+	coefficients := make([]int64, length)
 	count := 0
 	for index := 0; index < length; index++ {
 		value = left[index] - right[index]

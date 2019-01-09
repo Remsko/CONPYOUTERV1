@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-func solution(coefs []int) {
+func solution(coefs []int64) {
 	var a, b, c, delta float64
 
 	if len(coefs) > 3 {

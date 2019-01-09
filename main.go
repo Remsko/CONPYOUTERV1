@@ -15,14 +15,14 @@ func main() {
 		fmt.Println("usage: " + os.Args[0] + " \"<equation>\"")
 		os.Exit(1)
 	}
-	leftCoefs, rightCoefs := parsingEntry(os.Args[1])
-	if leftCoefs == nil || rightCoefs == nil {
-		fmt.Println("Exit on parsing error")
+	quadra, err := parsingEntry(os.Args[1])
+	if err != nil {
+		fmt.Print(err)
 		os.Exit(1)
 	}
-	reducedCoefs := reduce(leftCoefs, rightCoefs)
-	fmt.Printf("Left part: %v\n", leftCoefs)
-	fmt.Printf("Right part: %v\n", rightCoefs)
+	reducedCoefs := reduce(quadra.left, quadra.right)
+	fmt.Printf("Left part: %v\n", quadra.left)
+	fmt.Printf("Right part: %v\n", quadra.right)
 	fmt.Printf("Final: %v\n", reducedCoefs)
 	degree(reducedCoefs)
 	solution(reducedCoefs)

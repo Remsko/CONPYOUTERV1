@@ -6,34 +6,85 @@ import (
 	"strings"
 )
 
-func parsingEntry(equation string) ([]int, []int) {
+type tEqu struct {
+	left  string
+	right string
+}
+
+type tQuadra struct {
+	left  []int64
+	right []int64
+}
+
+func parsingEntry(equation string) (*tQuadra, error) {
 
 	fmt.Print("Input: ")
 	fmt.Println(equation)
 
-	leftStr, rightStr := splitEqual(equation)
-	if leftStr == "" || rightStr == "" {
-		return nil, nil
+	members, err := splitEqual(equation)
+	if err != nil {
+		return nil, err
 	}
-	leftArr := parseQuadratic(leftStr)
-	rightArr := parseQuadratic(rightStr)
-	return leftArr, rightArr
+	leftArr, err := parseMember(members.left)
+	if leftArr == nil {
+		fmt.Printf("Parsing error in left member: %s\n", members.left)
+		return nil, err
+	}
+	rightArr, err := parseMember(members.right)
+	if rightArr == nil {
+		fmt.Printf("Parsing error in right member: %s\n", members.right)
+		return nil, err
+	}
+	return &tQuadra{leftArr, rightArr}, nil
 }
 
-func splitEqual(equation string) (string, string) {
+func splitEqual(equation string) (*tEqu, error) {
 
 	split := strings.Split(equation, "=")
-	if split == nil || len(split) != 2 {
-		return "", ""
+
+	if len(split) != 2 {
+		return nil, fmt.Errorf("No equal sign in equation %v", equation)
 	}
-	return split[0], split[1]
+	return &tEqu{split[0], split[1]}, nil
+}
+
+func parseMember(member string) ([]int64, error) {
+
+	var length int
+
+	tokens := strings.Fields(member)
+	ret := make([]int64, 3)
+
+	if len(tokens) == 0 {
+		return nil, fmt.Errorf("Empty member")
+	}
+	for i := 0; i < len(tokens); i += length {
+
+		length = 0
+		if i > 0 && isSign(tokens[i]) == false {
+			return nil, fmt.Errorf("Math syntax near: %v", tokens[i])
+		}
+		number, err := nextNumber(tokens, &length, i)
+		if err != nil {
+			return nil, fmt.Errorf("Expect a number but receive: %v", tokens[i])
+		}
+		degree, err := nextDegree(tokens, &length, i)
+		if err != nil {
+			return nil, fmt.Errorf("Expect a \"* X^n\" format")
+		}
+		if degree > 2 {
+			return nil, fmt.Errorf("ComputerV1 solve only at least equation of degree 2")
+		}
+		ret[degree] = number
+	}
+	return ret, nil
 }
 
 func isSign(token string) bool {
 	return token == "+" || token == "-"
 }
 
-func nextNumber(tokens []string, length *int, index int) (int, error) {
+func nextNumber(tokens []string, length *int, index int) (int64, error) {
 
 	neg := false
 
@@ -49,21 +100,21 @@ func nextNumber(tokens []string, length *int, index int) (int, error) {
 	if neg != false {
 		number = -number
 	}
-	return int(number), nil
+	return number, nil
 }
 
 func nextDegree(tokens []string, length *int, index int) (int, error) {
 
-	err := fmt.Errorf("Wrong equation format for degree")
-	/*
-		if index+*length >= len(tokens)-2 {
-			return 0, err
-		}
-	*/
-	if tokens[index+*length] != "*" {
+	err := fmt.Errorf("Wrong equation format for degrees")
+
+	*length++
+	if index+*length >= len(tokens) || tokens[index+*length] != "*" {
 		return 0, err
 	}
 	*length++
+	if index+*length >= len(tokens) {
+		return 0, err
+	}
 	split := strings.Split(tokens[index+*length], "^")
 	*length++
 	if len(split) != 2 {
@@ -77,37 +128,4 @@ func nextDegree(tokens []string, length *int, index int) (int, error) {
 		return 0, err
 	}
 	return int(degree), nil
-}
-
-func parseQuadratic(member string) []int {
-
-	var length int
-
-	tokens := strings.Fields(member)
-	ret := make([]int, 3)
-
-	for i := 0; i < len(tokens); i += length {
-		length = 0
-		if i > 0 && isSign(tokens[i]) == false {
-			return nil
-		}
-		number, err := nextNumber(tokens, &length, i)
-		if err != nil {
-			fmt.Print(err)
-			return nil
-		}
-		length++
-		degree, err := nextDegree(tokens, &length, i)
-		if err != nil {
-			fmt.Print(err)
-			return nil
-		}
-		fmt.Print("Number: ")
-		fmt.Println(number)
-		fmt.Print("Degree: ")
-		fmt.Println(degree)
-		ret[degree] = number
-	}
-
-	return ret
 }
