@@ -6,6 +6,7 @@ import (
 )
 
 func solution(coefs []int64) {
+
 	var a, b, c, delta float64
 
 	if len(coefs) > 3 {
@@ -15,18 +16,34 @@ func solution(coefs []int64) {
 	a = float64(coefs[2])
 	b = float64(coefs[1])
 	c = float64(coefs[0])
-	delta = (b * b) - (4 * a * c)
-	if delta < 0.0 {
-		fmt.Println("Discriminant is strictly negative, there is no real solutions.")
-	} else if delta == 0.0 {
+	if a != float64(0) {
+		delta = (b * b) - (4 * a * c)
+		if delta < 0.0 {
+			fmt.Println("Discriminant is strictly negative, there is no real solutions.")
+		} else if delta == 0.0 {
+			fmt.Println("The solution is:")
+			root := -b / (2 * a)
+			fmt.Println(root)
+		} else {
+			fmt.Println("Discriminant is strictly positive, the two solutions are:")
+			root1 := (-b + math.Sqrt(delta)) / (2 * a)
+			root2 := (-b - math.Sqrt(delta)) / (2 * a)
+			fmt.Println(root1)
+			fmt.Println(root2)
+		}
+	} else if b != 0 {
 		fmt.Println("The solution is:")
-		root := -b / (2 * a)
-		fmt.Println(root)
+		if c == 0 {
+			fmt.Println("0")
+		} else {
+			aswr := c / b
+			fmt.Println(aswr)
+		}
 	} else {
-		fmt.Println("Discriminant is strictly positive, the two solutions are:")
-		root1 := (-b + math.Sqrt(delta)) / (2 * a)
-		root2 := (-b - math.Sqrt(delta)) / (2 * a)
-		fmt.Println(root1)
-		fmt.Println(root2)
+		if c == 0 {
+			fmt.Println("All real numbers are solutions")
+		} else {
+			fmt.Println("There is no solution: the equation is wrong")
+		}
 	}
 }

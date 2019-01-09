@@ -72,8 +72,11 @@ func parseMember(member string) ([]int64, error) {
 		if err != nil {
 			return nil, fmt.Errorf("Expect a \"* X^n\" format")
 		}
-		if degree > 2 {
+		if degree > 2 || degree < 0 {
 			return nil, fmt.Errorf("ComputerV1 solve only at least equation of degree 2")
+		}
+		if ret[degree] != 0 {
+			return nil, fmt.Errorf("Bad equation format")
 		}
 		ret[degree] = number
 	}
@@ -88,10 +91,13 @@ func nextNumber(tokens []string, length *int, index int) (int64, error) {
 
 	neg := false
 
-	for ; isSign(tokens[index+*length]) && index+*length < len(tokens); *length++ {
+	for ; index+*length < len(tokens) && isSign(tokens[index+*length]); *length++ {
 		if tokens[index+*length] == "-" {
 			neg = (neg == false)
 		}
+	}
+	if index+*length >= len(tokens) {
+		return 0, fmt.Errorf("Expect number")
 	}
 	number, err := strconv.ParseInt(tokens[index+*length], 10, 64)
 	if err != nil {
