@@ -18,9 +18,6 @@ type tQuadra struct {
 
 func parsingEntry(equation string) (*tQuadra, error) {
 
-	fmt.Print("Input: ")
-	fmt.Println(equation)
-
 	members, err := splitEqual(equation)
 	if err != nil {
 		return nil, err
@@ -57,6 +54,9 @@ func parseMember(member string) ([]int64, error) {
 
 	if len(tokens) == 0 {
 		return nil, fmt.Errorf("Empty member")
+	}
+	if len(tokens) == 1 && tokens[0] == "0" {
+		return ret, nil
 	}
 	for i := 0; i < len(tokens); i += length {
 

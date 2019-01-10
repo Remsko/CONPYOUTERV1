@@ -21,9 +21,6 @@ func main() {
 		os.Exit(1)
 	}
 	reducedCoefs := reduce(quadra.left, quadra.right)
-	fmt.Printf("Left part: %v\n", quadra.left)
-	fmt.Printf("Right part: %v\n", quadra.right)
-	fmt.Printf("Final: %v\n", reducedCoefs)
 	degree(reducedCoefs)
 	solution(reducedCoefs)
 }
