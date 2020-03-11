@@ -19,13 +19,15 @@ func solution(coefs []int64) {
 	if a != float64(0) {
 		delta = (b * b) - (4 * a * c)
 		if delta < 0.0 {
-			fmt.Println("Discriminant is strictly negative, there is no real solutions.")
+			fmt.Printf("Discriminant is strictly negative (%.2f), the two complex solutions are:\n", delta)
+			fmt.Printf("%.2f - i * %.2f / %.2f\n", -b, math.Sqrt(-delta), 2*a)
+			fmt.Printf("%.2f + i * %.2f / %.2f\n", -b, math.Sqrt(-delta), 2*a)
 		} else if delta == 0.0 {
 			fmt.Println("The solution is:")
 			root := -b / (2 * a)
 			fmt.Println(root)
 		} else {
-			fmt.Println("Discriminant is strictly positive, the two solutions are:")
+			fmt.Printf("Discriminant is strictly positive (%.2f), the two solutions are:\n", delta)
 			root1 := (-b + math.Sqrt(delta)) / (2 * a)
 			root2 := (-b - math.Sqrt(delta)) / (2 * a)
 			fmt.Println(root1)
@@ -36,7 +38,7 @@ func solution(coefs []int64) {
 		if c == 0 {
 			fmt.Println("0")
 		} else {
-			aswr := c / b
+			aswr := -c / b
 			fmt.Println(aswr)
 		}
 	} else {

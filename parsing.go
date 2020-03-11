@@ -70,7 +70,7 @@ func parseMember(member string) ([]int64, error) {
 		}
 		degree, err := nextDegree(tokens, &length, i)
 		if err != nil {
-			return nil, fmt.Errorf("Expect a \"* X^n\" format")
+			return nil, fmt.Errorf("Expect a \"* X^n\" format\n")
 		}
 		if degree > 2 || degree < 0 {
 			return nil, fmt.Errorf("ComputerV1 solve only at least equation of degree 2")
